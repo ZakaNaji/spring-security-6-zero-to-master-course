@@ -12,9 +12,12 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfig {
@@ -29,11 +32,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsManager userDetailsManager() {
-        UserDetails user = User.builder().username("user").password("{noop}1234").authorities("visitor").build();
-        UserDetails admin = User.builder().username("admin").password("{bcrypt}$2a$12$dZBFixbOT2dykZX5ZFL/megPFgoV.n7nkyKhGvwoA0AdU2uG7uEsW").authorities("admin").build();
-
-        return new InMemoryUserDetailsManager(user, admin);
+    public UserDetailsManager userDetailsManager(DataSource dataSource) {
+        return new JdbcUserDetailsManager(dataSource);
     }
 
     @Bean
@@ -41,8 +41,8 @@ public class SecurityConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    @Bean
+    /*@Bean
     public CompromisedPasswordChecker compromisedPasswordChecker() {
         return new HaveIBeenPwnedRestApiPasswordChecker();
-    }
+    }*/
 }
