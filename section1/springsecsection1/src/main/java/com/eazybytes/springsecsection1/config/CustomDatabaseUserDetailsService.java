@@ -2,6 +2,7 @@ package com.eazybytes.springsecsection1.config;
 
 import com.eazybytes.springsecsection1.model.Customer;
 import com.eazybytes.springsecsection1.repository.CustomerRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.List;
 
-@Service
+@Service("userDetailsService")
 public class CustomDatabaseUserDetailsService implements UserDetailsService {
 
     private final CustomerRepository customerRepository;
