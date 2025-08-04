@@ -1,5 +1,6 @@
 package com.eazybytes.springsecsection1.config;
 
+import com.eazybytes.springsecsection1.exceptionhandling.CustomBasicAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -11,15 +12,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@Profile("!prod")
-public class SecurityConfig {
+@Profile("prod")
+public class ProdSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(req ->
                 req.requestMatchers("/welcome","/contact", "/notices", "/error", "/register").permitAll().anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
-                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
