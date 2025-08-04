@@ -1,5 +1,6 @@
 package com.eazybytes.springsecsection1.config;
 
+import com.eazybytes.springsecsection1.exceptionhandling.CustomAccessDeniedHandler;
 import com.eazybytes.springsecsection1.exceptionhandling.CustomBasicAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,9 @@ public class ProdSecurityConfig {
                 req.requestMatchers("/welcome","/contact", "/notices", "/error", "/register").permitAll().anyRequest().authenticated())
                 .httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exp -> exp.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint())) // global exception handling via the entry point
+                .exceptionHandling(exp -> exp
+                        .authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint())// global exception handling via the entry point
+                        .accessDeniedHandler(new CustomAccessDeniedHandler()))
                 .build();
     }
 
