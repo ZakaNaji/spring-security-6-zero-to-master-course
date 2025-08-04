@@ -21,6 +21,7 @@ public class ProdSecurityConfig {
                 req.requestMatchers("/welcome","/contact", "/notices", "/error", "/register").permitAll().anyRequest().authenticated())
                 .httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()))
                 .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exp -> exp.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint())) // global exception handling via the entry point
                 .build();
     }
 
