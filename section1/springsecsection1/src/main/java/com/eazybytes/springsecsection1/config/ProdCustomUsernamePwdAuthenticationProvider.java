@@ -11,12 +11,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("!prod")
-public class CustomUsernamePwdAuthenticationProvider implements AuthenticationProvider {
+@Profile("prod")
+public class ProdCustomUsernamePwdAuthenticationProvider implements AuthenticationProvider {
     private final CustomDatabaseUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
-    public CustomUsernamePwdAuthenticationProvider(CustomDatabaseUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public ProdCustomUsernamePwdAuthenticationProvider(CustomDatabaseUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -27,8 +27,11 @@ public class CustomUsernamePwdAuthenticationProvider implements AuthenticationPr
         String password = authentication.getCredentials().toString();
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        //for any env other that prod, no need to check the password.
-        return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
+        if (passwordEncoder.matches(password, userDetails.getPassword())) {
+            return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
+            //we can do some custom logic here
+        }
+        throw new BadCredentialsException("Invalid password");
     }
 
     @Override
