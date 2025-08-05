@@ -15,6 +15,7 @@ public class CustomBasicAuthenticationEntryPoint implements AuthenticationEntryP
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.addHeader("Custom-Error", "Auth Failed bc of something");
+        response.addHeader("WWW-Authenticate", "Basic realm=\"Realm\"");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
         String message = (authException != null && authException.getMessage() != null)? authException.getMessage() : "UNAUTHORIZED";
