@@ -28,7 +28,7 @@ public class CustomDatabaseUserDetailsService implements UserDetailsService {
         Customer customer = customerRepository
                 .findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("username not found: " + username));
-        Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(customer.getRole().name()));
+        Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(customer.getRole()));
         return new User(username, customer.getPassword(), authorities);
     }
 }
