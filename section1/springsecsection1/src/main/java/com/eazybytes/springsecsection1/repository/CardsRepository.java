@@ -1,12 +1,11 @@
-package com.eazybytes.repository;
+package com.eazybytes.springsecsection1.repository;
 
 import java.util.List;
 
-import com.eazybytes.model.Loans;
+import com.eazybytes.springsecsection1.model.Cards;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.eazybytes.model.Cards;
 
 @Repository
 public interface CardsRepository extends CrudRepository<Cards, Long> {
