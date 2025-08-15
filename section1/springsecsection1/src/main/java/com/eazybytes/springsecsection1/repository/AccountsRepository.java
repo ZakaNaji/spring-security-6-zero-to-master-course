@@ -1,6 +1,6 @@
-package com.eazybytes.repository;
+package com.eazybytes.springsecsection1.repository;
 
-import com.eazybytes.model.Accounts;
+import com.eazybytes.springsecsection1.model.Accounts;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
