@@ -1,4 +1,4 @@
-package com.eazybytes.model;
+package com.eazybytes.springsecsection1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
