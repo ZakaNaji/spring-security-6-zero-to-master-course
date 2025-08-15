@@ -1,7 +1,8 @@
-package com.eazybytes.controller;
+package com.eazybytes.springsecsection1.controller;
 
-import com.eazybytes.model.Customer;
-import com.eazybytes.repository.CustomerRepository;
+
+import com.eazybytes.springsecsection1.model.Customer;
+import com.eazybytes.springsecsection1.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,8 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody Customer customer) {
         try {
-            String hashPwd = passwordEncoder.encode(customer.getPwd());
-            customer.setPwd(hashPwd);
+            String hashPwd = passwordEncoder.encode(customer.getPassword());
+            customer.setPassword(hashPwd);
             customer.setCreateDt(new Date(System.currentTimeMillis()));
             Customer savedCustomer = customerRepository.save(customer);
 
