@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,6 +29,8 @@ public class ProdSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .securityContext(securityContextConfig -> securityContextConfig.requireExplicitSave(false))
+                .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .cors(corsConfig -> corsConfig.configurationSource(new CorsConfigurationSource() {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
@@ -51,10 +54,6 @@ public class ProdSecurityConfig {
                 .exceptionHandling(exp -> exp
                         .authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint())// global exception handling via the entry point
                         .accessDeniedHandler(new CustomAccessDeniedHandler()))
-                .sessionManagement(smc -> smc
-                        .invalidSessionUrl("/invalidSession")
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(true))
                 .build();
     }
 
