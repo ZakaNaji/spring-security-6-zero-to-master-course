@@ -20,7 +20,7 @@ public class NoticesController {
 
     private final NoticeRepository noticeRepository;
 
-    @CrossOrigin(origins = "http://localhost:4200", methods = {RequestMethod.GET})
+    //@CrossOrigin(origins = "http://localhost:4200", methods = {RequestMethod.GET})
     @GetMapping("/notices")
     public ResponseEntity<List<Notice>> getNotices() {
         List<Notice> notices = noticeRepository.findAllActiveNotices();
