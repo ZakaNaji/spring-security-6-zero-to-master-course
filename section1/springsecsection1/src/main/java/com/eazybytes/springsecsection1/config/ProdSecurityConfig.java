@@ -3,6 +3,7 @@ package com.eazybytes.springsecsection1.config;
 import com.eazybytes.springsecsection1.exceptionhandling.CustomAccessDeniedHandler;
 import com.eazybytes.springsecsection1.exceptionhandling.CustomBasicAuthenticationEntryPoint;
 import com.eazybytes.springsecsection1.filters.CsrfTokenLogger;
+import com.eazybytes.springsecsection1.filters.ExposeCsrfTokenFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -36,10 +39,12 @@ public class ProdSecurityConfig {
                         return corsConfiguration;
                     }
                 }))
+                .csrf(csrfConfig -> csrfConfig.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .addFilterAfter(new ExposeCsrfTokenFilter(), BasicAuthenticationFilter.class)
+                //.addFilterAfter(new CsrfTokenLogger(), CsrfFilter.class)
                 .authorizeHttpRequests(req ->
                 req.requestMatchers("/welcome","/contact", "/notices", "/error", "/register", "/invalidSession").permitAll().anyRequest().authenticated())
                 .httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()))
-                .addFilterAfter(new CsrfTokenLogger(), CsrfFilter.class)
                 .exceptionHandling(exp -> exp
                         .authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint())// global exception handling via the entry point
                         .accessDeniedHandler(new CustomAccessDeniedHandler()))
