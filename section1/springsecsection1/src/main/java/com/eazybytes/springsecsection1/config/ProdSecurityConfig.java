@@ -45,7 +45,8 @@ public class ProdSecurityConfig {
                 }))
                 .csrf(csrfConfig -> csrfConfig
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                        .ignoringRequestMatchers("/contact", "/register"))
                 .addFilterAfter(new ExposeCsrfTokenFilter(), BasicAuthenticationFilter.class)
                 //.addFilterAfter(new CsrfTokenLogger(), CsrfFilter.class)
                 .authorizeHttpRequests(req ->
