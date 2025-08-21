@@ -49,8 +49,13 @@ public class ProdSecurityConfig {
                         .ignoringRequestMatchers("/contact", "/register"))
                 .addFilterAfter(new ExposeCsrfTokenFilter(), BasicAuthenticationFilter.class)
                 //.addFilterAfter(new CsrfTokenLogger(), CsrfFilter.class)
-                .authorizeHttpRequests(req ->
-                req.requestMatchers("/welcome","/contact", "/notices", "/error", "/register", "/invalidSession").permitAll().anyRequest().authenticated())
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/welcome","/contact", "/notices", "/error", "/register", "/invalidSession").permitAll()
+                        .requestMatchers("/myBalance").hasAnyAuthority("VIEWBALANCE")
+                        .requestMatchers("/myLoans").hasAuthority("VIEWLOANS")
+                        .requestMatchers("/myCards").hasAuthority("VIEWCARDS")
+                        .requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
+                )
                 .httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()))
                 .exceptionHandling(exp -> exp
                         .authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint())// global exception handling via the entry point
