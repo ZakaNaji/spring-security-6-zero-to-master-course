@@ -51,10 +51,14 @@ public class ProdSecurityConfig {
                 //.addFilterAfter(new CsrfTokenLogger(), CsrfFilter.class)
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/welcome","/contact", "/notices", "/error", "/register", "/invalidSession").permitAll()
-                        .requestMatchers("/myBalance").hasAnyAuthority("VIEWBALANCE")
-                        .requestMatchers("/myLoans").hasAuthority("VIEWLOANS")
-                        .requestMatchers("/myCards").hasAuthority("VIEWCARDS")
-                        .requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
+                        //.requestMatchers("/myBalance").hasAnyAuthority("VIEWBALANCE")
+                        //.requestMatchers("/myLoans").hasAuthority("VIEWLOANS")
+                        //.requestMatchers("/myCards").hasAuthority("VIEWCARDS")
+                        //.requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
+                        .requestMatchers("/myBalance").hasRole("USER")
+                        .requestMatchers("/myLoans").hasRole("USER")
+                        .requestMatchers("/myCards").hasRole("ADMIN")
+                        .requestMatchers("/myAccount").hasAnyRole("USER", "ADMIN")
                 )
                 .httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()))
                 .exceptionHandling(exp -> exp
