@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "customer")
@@ -34,4 +36,8 @@ public class Customer {
     @Column(name = "create_dt")
     @JsonIgnore
     private Date createDt;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "customer")
+    private Set<Authority> authorities = new HashSet<>();
 }
