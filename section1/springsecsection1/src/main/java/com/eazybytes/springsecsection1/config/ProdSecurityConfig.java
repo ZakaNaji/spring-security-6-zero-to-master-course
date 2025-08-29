@@ -22,6 +22,8 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 @Profile("prod")
 public class ProdSecurityConfig {
@@ -39,6 +41,7 @@ public class ProdSecurityConfig {
                         corsConfiguration.addAllowedHeader("*");
                         corsConfiguration.setAllowCredentials(true);
                         corsConfiguration.setMaxAge(3600L);
+                        corsConfiguration.setExposedHeaders(Arrays.asList("Authorization"));
                         return corsConfiguration;
                     }
                 }))
