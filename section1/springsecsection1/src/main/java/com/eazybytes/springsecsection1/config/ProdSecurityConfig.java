@@ -7,10 +7,14 @@ import com.eazybytes.springsecsection1.filters.ExposeCsrfTokenFilter;
 import com.eazybytes.springsecsection1.filters.JwtTokenGeneratorFilter;
 import com.eazybytes.springsecsection1.filters.JwtTokenValidatorFilter;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -54,13 +58,13 @@ public class ProdSecurityConfig {
                 .csrf(csrfConfig -> csrfConfig
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                        .ignoringRequestMatchers("/contact", "/register"))
+                        .ignoringRequestMatchers("/contact", "/register", "/apiLogin"))
                 .addFilterAfter(new ExposeCsrfTokenFilter(), BasicAuthenticationFilter.class)
                 //.addFilterAfter(new CsrfTokenLogger(), CsrfFilter.class)
                 .addFilterAfter(new JwtTokenGeneratorFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new JwtTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/welcome","/contact", "/notices", "/error", "/register", "/invalidSession", "/user").permitAll()
+                        .requestMatchers("/welcome","/contact", "/notices", "/error", "/register", "/invalidSession", "/user", "/apiLogin").permitAll()
                         //.requestMatchers("/myBalance").hasAnyAuthority("VIEWBALANCE")
                         //.requestMatchers("/myLoans").hasAuthority("VIEWLOANS")
                         //.requestMatchers("/myCards").hasAuthority("VIEWCARDS")
@@ -93,5 +97,12 @@ public class ProdSecurityConfig {
             Authentication authentication = e.getAuthentication();
             System.out.println("[%s] was successfully auth using [%s]".formatted(authentication.getName(), authentication.getClass().getSimpleName()));
         };
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(@Qualifier("customProvider") AuthenticationProvider provider) {
+        ProviderManager providerManager = new ProviderManager(provider);
+        providerManager.setEraseCredentialsAfterAuthentication(false);
+        return providerManager;
     }
 }

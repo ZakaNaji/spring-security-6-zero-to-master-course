@@ -1,5 +1,6 @@
 package com.eazybytes.springsecsection1.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile("prod")
+@Qualifier("customProvider")
 public class ProdCustomUsernamePwdAuthenticationProvider implements AuthenticationProvider {
     private final CustomDatabaseUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
