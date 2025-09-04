@@ -60,7 +60,7 @@ public class ProdSecurityConfig {
                 .addFilterAfter(new JwtTokenGeneratorFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(new JwtTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/welcome","/contact", "/notices", "/error", "/register", "/invalidSession").permitAll()
+                        .requestMatchers("/welcome","/contact", "/notices", "/error", "/register", "/invalidSession", "/user").permitAll()
                         //.requestMatchers("/myBalance").hasAnyAuthority("VIEWBALANCE")
                         //.requestMatchers("/myLoans").hasAuthority("VIEWLOANS")
                         //.requestMatchers("/myCards").hasAuthority("VIEWCARDS")
