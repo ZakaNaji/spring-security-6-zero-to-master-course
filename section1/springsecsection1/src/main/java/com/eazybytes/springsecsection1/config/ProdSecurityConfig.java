@@ -4,6 +4,8 @@ import com.eazybytes.springsecsection1.exceptionhandling.CustomAccessDeniedHandl
 import com.eazybytes.springsecsection1.exceptionhandling.CustomBasicAuthenticationEntryPoint;
 import com.eazybytes.springsecsection1.filters.CsrfTokenLogger;
 import com.eazybytes.springsecsection1.filters.ExposeCsrfTokenFilter;
+import com.eazybytes.springsecsection1.filters.JwtTokenGeneratorFilter;
+import com.eazybytes.springsecsection1.filters.JwtTokenValidatorFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
@@ -42,6 +44,7 @@ public class ProdSecurityConfig {
                         corsConfiguration.addAllowedOrigin("http://localhost:4200");
                         corsConfiguration.addAllowedMethod("*");
                         corsConfiguration.addAllowedHeader("*");
+                        corsConfiguration.addExposedHeader("Authorization");
                         corsConfiguration.setAllowCredentials(true);
                         corsConfiguration.setMaxAge(3600L);
                         corsConfiguration.setExposedHeaders(Arrays.asList("Authorization"));
@@ -54,6 +57,8 @@ public class ProdSecurityConfig {
                         .ignoringRequestMatchers("/contact", "/register"))
                 .addFilterAfter(new ExposeCsrfTokenFilter(), BasicAuthenticationFilter.class)
                 //.addFilterAfter(new CsrfTokenLogger(), CsrfFilter.class)
+                .addFilterAfter(new JwtTokenGeneratorFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new JwtTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/welcome","/contact", "/notices", "/error", "/register", "/invalidSession").permitAll()
                         //.requestMatchers("/myBalance").hasAnyAuthority("VIEWBALANCE")
