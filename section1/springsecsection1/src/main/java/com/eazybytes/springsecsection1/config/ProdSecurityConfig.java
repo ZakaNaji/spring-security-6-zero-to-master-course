@@ -5,13 +5,16 @@ import com.eazybytes.springsecsection1.exceptionhandling.CustomBasicAuthenticati
 import com.eazybytes.springsecsection1.filters.CsrfTokenLogger;
 import com.eazybytes.springsecsection1.filters.ExposeCsrfTokenFilter;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -78,4 +81,12 @@ public class ProdSecurityConfig {
     public CompromisedPasswordChecker compromisedPasswordChecker() {
         return new HaveIBeenPwnedRestApiPasswordChecker();
     }*/
+
+    @Bean
+    ApplicationListener<AuthenticationSuccessEvent> authenticationSuccessEventApplicationListener() {
+        return e -> {
+            Authentication authentication = e.getAuthentication();
+            System.out.println("[%s] was successfully auth using [%s]".formatted(authentication.getName(), authentication.getClass().getSimpleName()));
+        };
+    }
 }
